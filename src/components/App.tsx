@@ -1,5 +1,4 @@
-import React from 'react';
-import players from '../data/players.json'
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { IPlayer, ITeam, loadPlayers } from '../store/actions';
 import { IStoreState } from '../store/reducers';
@@ -10,17 +9,33 @@ interface IProps {
   loadPlayers: any;
 }
 
-function App() {
+function _App(props: IProps) {
+  const { 
+    players, 
+    teams, 
+    loadPlayers 
+   } = props;
+
+  useEffect(() => {
+    loadPlayers()
+  }, [players, teams])
+  console.log(players)
   return (
     <div>
       <header>
         <p>
-          Try on {players.players[0].name}
+          Try on
         </p>
-        <img src="/assets/images/js.jpg"></img>
       </header>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = ({ players, teams }: IStoreState): { players: IPlayer[], teams: ITeam[] } => {
+  return { players, teams };
+};
+
+export const App = connect(
+  mapStateToProps,
+  { loadPlayers }
+)(_App);
