@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { IPlayer } from './players';
+import { IPlayer } from './availablePlayers';
 import { ActionTypes } from './types';
 
 export interface ITeam {

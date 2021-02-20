@@ -1,41 +1,63 @@
-import React, { useEffect } from 'react';
+import { Button, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { IPlayer, ITeam, loadPlayers } from '../store/actions';
+import { IPlayer, ITeam, loadAvailablePlayers, removePlayer } from '../store/actions';
 import { IStoreState } from '../store/reducers';
+import { PlayersList } from './PlayersList';
 
 interface IProps {
-  players: IPlayer[];
+  availablePlayers: IPlayer[];
   teams: ITeam[];
-  loadPlayers: any;
+  loadAvailablePlayers: Function;
+  removePlayer: typeof removePlayer;
 }
 
 function _App(props: IProps) {
   const { 
-    players, 
+    availablePlayers, 
     teams, 
-    loadPlayers 
+    loadAvailablePlayers, 
+    removePlayer,
    } = props;
 
+  //  const [aplayers, setPlayers] = useState<IPlayer[]>()
+
   useEffect(() => {
-    loadPlayers()
-  }, [players, teams])
-  console.log(players)
+    loadAvailablePlayers()
+  }, [loadAvailablePlayers])
+
+  // useEffect(() => {
+  //   setPlayers(availablePlayers)
+  // }, [availablePlayers])
+
+  const removePlayerFromAvailable = (email: string): void => {
+    console.log('DONNNNNNE', email)
+    removePlayer(email)
+  }
+  function renderAvailablePlayers(): JSX.Element[] {
+    return availablePlayers.map((player) => {
+      return <Button onClick={() => removePlayerFromAvailable(player.email)}><Typography>{player.name}</Typography></Button>
+    })
+  }
+  console.log(availablePlayers)
   return (
     <div>
       <header>
-        <p>
-          Try on
-        </p>
+        {/* <PlayersList players={availablePlayers} removePlayerFromAvailable={removePlayerFromAvailable} /> */}
+        {renderAvailablePlayers()}
+        {/* {aplayers ? aplayers.map((player) => {
+          return <Button onClick={() => removePlayerFromAvailable(player.email)}><Typography>{player.name}</Typography></Button>
+        }) : <p>Loading</p>} */}
       </header>
     </div>
   );
 }
 
-const mapStateToProps = ({ players, teams }: IStoreState): { players: IPlayer[], teams: ITeam[] } => {
-  return { players, teams };
+const mapStateToProps = ({ availablePlayers, teams }: IStoreState): { availablePlayers: IPlayer[], teams: ITeam[] } => {
+  return { availablePlayers, teams };
 };
 
 export const App = connect(
   mapStateToProps,
-  { loadPlayers }
+  { loadAvailablePlayers, removePlayer }
 )(_App);

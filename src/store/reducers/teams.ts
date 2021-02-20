@@ -1,5 +1,4 @@
-import { IAddPlayerToTeamAction, ITeam } from '../actions';
-import { ActionTypes } from '../actions';
+import { IAddPlayerToTeamAction, ITeam, ActionTypes } from '../actions';
 
 export const teamsReducer = (state: ITeam[] = [], action: IAddPlayerToTeamAction) => {
     switch (action.type) {

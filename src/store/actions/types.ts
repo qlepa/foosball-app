@@ -1,4 +1,10 @@
+import { ILoadAvailablePlayersAction, IRemovePlayerAction } from "./availablePlayers";
+import { IAddPlayerToTeamAction } from "./teams";
+
 export enum ActionTypes {
-    loadPlayers,
+    loadAvailablePlayers,
     addPlayerToTeam,
+    removePlayer,
 }
+
+export type Action = ILoadAvailablePlayersAction | IRemovePlayerAction | IAddPlayerToTeamAction;
