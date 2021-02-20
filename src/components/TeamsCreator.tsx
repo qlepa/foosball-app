@@ -1,31 +1,27 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-import { IPlayer, ITeam } from "../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addPlayerToTeam, IPlayer, ITeam, removePlayer } from "../store/actions";
+import { IStoreState } from "../store/reducers";
 import { PlayerCard } from "./PlayerCard";
 
+const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
+const selectTeams = (state: IStoreState) => state.teams;
+
 interface IProps {
-    readonly availablePlayers: IPlayer[];
-    teams: ITeam[];
-    removePlayerFromAvailable: any;
     goBack: (view: 'playersList' | 'teamsCreator' | 'loading') => void;
-    addPlayerToTeam: Function;
 }
 
 export function TeamsCreator(props: IProps) {
-    const {
-        availablePlayers,
-        teams,
-        removePlayerFromAvailable,
-        goBack,
-        addPlayerToTeam,
-    } = props;
-
+    const dispatch = useDispatch();
+    const { goBack } = props;
+    const availablePlayers = useSelector(selectAvailablePlayers);
+    const teams = useSelector(selectTeams);
     const [activeTeam, setActiveTeam] = useState<ITeam['name']>('Team A');
-
     const handleClick = (team: ITeam['name'],player: IPlayer) => {
-        removePlayerFromAvailable(player)
-        addPlayerToTeam(team, player)
-    }
+            dispatch(removePlayer(player))
+            dispatch(addPlayerToTeam(team, player))
+        }
 
     return (
         <div>

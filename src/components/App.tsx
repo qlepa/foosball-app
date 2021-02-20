@@ -1,42 +1,22 @@
 import { Button, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { IPlayer, ITeam, loadAvailablePlayers, removePlayer, addPlayerToTeam } from '../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadAvailablePlayers } from '../store/actions';
 import { IStoreState } from '../store/reducers';
 import { PlayerCard } from './PlayerCard';
 import { TeamsCreator } from './TeamsCreator';
 
-interface IProps {
-  availablePlayers: IPlayer[];
-  teams: ITeam[];
-  loadAvailablePlayers: Function;
-  removePlayer: typeof removePlayer;
-  addPlayerToTeam: typeof addPlayerToTeam;
-}
+const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 
-function _App(props: IProps) {
-  const { 
-    availablePlayers, 
-    teams, 
-    loadAvailablePlayers, 
-    removePlayer,
-    addPlayerToTeam,
-   } = props;
-
+export function App() {
+  const dispatch = useDispatch();
   const [view, setView] = useState<'playersList' | 'teamsCreator' | 'loading'>('loading')
+  const availablePlayers = useSelector(selectAvailablePlayers);
 
   useEffect(() => {
-    loadAvailablePlayers()
+    dispatch(loadAvailablePlayers())
     setView('playersList')
-  }, [loadAvailablePlayers])
-
-  const removePlayerFromAvailable = (player: IPlayer): void => {
-    removePlayer(player)
-  }
-
-  const addPlayerToActiveTeam = (team: ITeam['name'], player: IPlayer) => {
-    addPlayerToTeam(team, player)
-  }
+  }, [dispatch])
 
   function renderView(): any {
     switch (view){
@@ -52,7 +32,7 @@ function _App(props: IProps) {
         </div>
         )
       case 'teamsCreator':
-        return <TeamsCreator addPlayerToTeam={addPlayerToActiveTeam} availablePlayers={availablePlayers} teams={teams} removePlayerFromAvailable={removePlayerFromAvailable} goBack={(view) => setView(view)} />
+        return <TeamsCreator goBack={(view) => setView(view)} />
       case 'loading':
       default:
         return <p>Loading</p>
@@ -70,12 +50,3 @@ function _App(props: IProps) {
     </div>
   )
 }
-
-const mapStateToProps = ({ availablePlayers, teams }: IStoreState): { availablePlayers: IPlayer[], teams: ITeam[] } => {
-  return { availablePlayers, teams };
-};
-
-export const App = connect(
-  mapStateToProps,
-  { loadAvailablePlayers, removePlayer, addPlayerToTeam }
-)(_App);
