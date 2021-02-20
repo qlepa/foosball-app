@@ -8,7 +8,7 @@ export const availablePlayersReducer = (
         case ActionTypes.loadAvailablePlayers:
             return action.payload;
         case ActionTypes.removePlayer:
-            return state.filter((player: IPlayer) => player.email !== action.payload);
+            return state.filter((player: IPlayer) => player !== action.payload);
         default:
             return state;
     }

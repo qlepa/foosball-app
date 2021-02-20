@@ -1,14 +1,25 @@
-import { IAddPlayerToTeamAction, ITeam, ActionTypes } from '../actions';
+import { Action, ITeam, ActionTypes } from '../actions';
 
-export const teamsReducer = (state: ITeam[] = [], action: IAddPlayerToTeamAction) => {
+const initialState: ITeam[] = [
+    {
+        name: 'Team A',
+        players: []
+    },
+    {
+        name: 'Team B',
+        players: []
+    }
+]
+
+export const teamsReducer = (state: ITeam[] = initialState, action: Action) => {
     switch (action.type) {
         case ActionTypes.addPlayerToTeam:
-            // Znajdź druzynę i dodaj na końcu playera.
-            return {
-                ...state,
-                teams: state.map((team) => team.name === action.payload.name ? team.players.push(action.payload.player) : team)
-                // teams: state.teams.find((team) => team.name === action.payload.name)?.players.push(action.payload.player)
-            };
+            state.map((team) => {
+                if (team.name === action.payload.name) {
+                    team.players.push(action.payload.player)
+                }
+            });
+            return state;
         default:
             return state;
     }

@@ -19,7 +19,7 @@ export interface ILoadAvailablePlayersAction {
 
 export interface IRemovePlayerAction {
     type: ActionTypes.removePlayer;
-    payload: string;
+    payload: IPlayer;
 }
 
 export const loadAvailablePlayers = () => {
@@ -31,9 +31,9 @@ export const loadAvailablePlayers = () => {
     };
 };
 
-export const removePlayer = (email: string): IRemovePlayerAction => {
+export const removePlayer = (player: IPlayer): IRemovePlayerAction => {
     return {
         type: ActionTypes.removePlayer,
-        payload: email
+        payload: player
     };
 };

@@ -1,15 +1,17 @@
 import { Button, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { IPlayer, ITeam, loadAvailablePlayers, removePlayer } from '../store/actions';
+import { IPlayer, ITeam, loadAvailablePlayers, removePlayer, addPlayerToTeam } from '../store/actions';
 import { IStoreState } from '../store/reducers';
-import { PlayersList } from './PlayersList';
+import { PlayerCard } from './PlayerCard';
+import { TeamsCreator } from './TeamsCreator';
 
 interface IProps {
   availablePlayers: IPlayer[];
   teams: ITeam[];
   loadAvailablePlayers: Function;
   removePlayer: typeof removePlayer;
+  addPlayerToTeam: typeof addPlayerToTeam;
 }
 
 function _App(props: IProps) {
@@ -18,39 +20,55 @@ function _App(props: IProps) {
     teams, 
     loadAvailablePlayers, 
     removePlayer,
+    addPlayerToTeam,
    } = props;
 
-  //  const [aplayers, setPlayers] = useState<IPlayer[]>()
+  const [view, setView] = useState<'playersList' | 'teamsCreator' | 'loading'>('loading')
 
   useEffect(() => {
     loadAvailablePlayers()
+    setView('playersList')
   }, [loadAvailablePlayers])
 
-  // useEffect(() => {
-  //   setPlayers(availablePlayers)
-  // }, [availablePlayers])
+  const removePlayerFromAvailable = (player: IPlayer): void => {
+    removePlayer(player)
+  }
 
-  const removePlayerFromAvailable = (email: string): void => {
-    console.log('DONNNNNNE', email)
-    removePlayer(email)
+  const addPlayerToActiveTeam = (team: ITeam['name'], player: IPlayer) => {
+    addPlayerToTeam(team, player)
   }
-  function renderAvailablePlayers(): JSX.Element[] {
-    return availablePlayers.map((player) => {
-      return <Button onClick={() => removePlayerFromAvailable(player.email)}><Typography>{player.name}</Typography></Button>
-    })
+
+  function renderView(): any {
+    switch (view){
+      case 'playersList':
+        return (
+        <div>
+          {availablePlayers.map((player) => {
+            return <>
+              <PlayerCard player={player} />
+            </>
+          })}
+          <Button onClick={() => setView('teamsCreator')}>Create</Button>
+        </div>
+        )
+      case 'teamsCreator':
+        return <TeamsCreator addPlayerToTeam={addPlayerToActiveTeam} availablePlayers={availablePlayers} teams={teams} removePlayerFromAvailable={removePlayerFromAvailable} goBack={(view) => setView(view)} />
+      case 'loading':
+      default:
+        return <p>Loading</p>
+    };
   }
-  console.log(availablePlayers)
+
   return (
     <div>
       <header>
-        {/* <PlayersList players={availablePlayers} removePlayerFromAvailable={removePlayerFromAvailable} /> */}
-        {renderAvailablePlayers()}
-        {/* {aplayers ? aplayers.map((player) => {
-          return <Button onClick={() => removePlayerFromAvailable(player.email)}><Typography>{player.name}</Typography></Button>
-        }) : <p>Loading</p>} */}
+        Cybervadis team builder
       </header>
+      <body>
+        {renderView()}
+      </body>
     </div>
-  );
+  )
 }
 
 const mapStateToProps = ({ availablePlayers, teams }: IStoreState): { availablePlayers: IPlayer[], teams: ITeam[] } => {
@@ -59,5 +77,5 @@ const mapStateToProps = ({ availablePlayers, teams }: IStoreState): { availableP
 
 export const App = connect(
   mapStateToProps,
-  { loadAvailablePlayers, removePlayer }
+  { loadAvailablePlayers, removePlayer, addPlayerToTeam }
 )(_App);

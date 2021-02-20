@@ -10,19 +10,17 @@ export interface ITeam {
 export interface IAddPlayerToTeamAction {
     type: ActionTypes.addPlayerToTeam,
     payload: {
-        name: ITeam["name"],
+        name: ITeam['name'],
         player: IPlayer,
     }
 }
 
-export const addPlayerToTeam = (team: ITeam["name"], player: IPlayer) => {
-    return (dispatch: Dispatch) => {
-        dispatch<IAddPlayerToTeamAction>({
-            type: ActionTypes.addPlayerToTeam,
-            payload: {
-                name: team,
-                player: player
-            }
-        });
+export const addPlayerToTeam = (team: ITeam['name'], player: IPlayer) => {
+    return {
+        type: ActionTypes.addPlayerToTeam,
+        payload: {
+            name: team,
+            player: player
+        }
     };
 };
