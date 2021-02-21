@@ -1,4 +1,3 @@
-import { Dispatch } from 'redux';
 import { IPlayer } from './availablePlayers';
 import { ActionTypes } from './types';
 

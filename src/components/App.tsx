@@ -1,4 +1,4 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAvailablePlayers } from '../store/actions';
@@ -10,7 +10,7 @@ const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 
 export function App() {
   const dispatch = useDispatch();
-  const [view, setView] = useState<'playersList' | 'teamsCreator' | 'loading'>('loading')
+  const [view, setView] = useState<'playersList' | 'teamsCreator' | 'loading'>('loading');
   const availablePlayers = useSelector(selectAvailablePlayers);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function App() {
       default:
         return <p>Loading</p>
     };
-  }
+  };
 
   return (
     <div>
@@ -48,5 +48,5 @@ export function App() {
         {renderView()}
       </body>
     </div>
-  )
-}
+  );
+};
