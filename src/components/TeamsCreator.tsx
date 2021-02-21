@@ -1,5 +1,5 @@
 import { Avatar, Button, Grid, ListItemText, makeStyles, MenuItem, Select, Switch, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlayerToTeam, IPlayer, ITeam, removePlayer } from "../store/actions";
 import { IStoreState } from "../store/reducers";
@@ -30,30 +30,68 @@ export function TeamsCreator(props: IProps) {
     const availablePlayers = useSelector(selectAvailablePlayers);
     const teams = useSelector(selectTeams);
     const [activeTeam, setActiveTeam] = useState<ITeam['name']>('Team A');
+    const [isTeamAReady, setTeamAStatus] = useState<boolean>(false);
+    const [isTeamBReady, setTeamBStatus] = useState<boolean>(false);
+    useEffect(
+        () => {
+            teams.forEach((team) => {
+                if (teamState(team) === TeamState.TeamIsFull) {
+                    switch (team.name) {
+                        case 'Team A':
+                            setTeamAStatus(true);
+                            break;
+                        case 'Team B':
+                            setTeamBStatus(true);
+                            break;
+                    }  
+                } else if (teamState(team) === TeamState.TeamIncomplete) {
+                    switch (team.name) {
+                        case 'Team A':
+                            setTeamAStatus(false);
+                            break;
+                        case 'Team B':
+                            setTeamBStatus(false);
+                            break;
+
+                    }  
+                }
+            })
+        }, [availablePlayers, teams]
+    )
     const handleClick = (team: ITeam['name'],player: IPlayer) => {
             dispatch(removePlayer(player))
             dispatch(addPlayerToTeam(team, player))
         };
-    const teamStatus = (team: ITeam) => {
-        const state = teamState(team.players.length)
+    const teamStatus = (team: ITeam): JSX.Element => {
+        const state = teamState(team)
         switch(state) {
             case TeamState.TeamIncomplete:
                 return <p>Drużyna niekompletna</p>
             case TeamState.TeamIsFull:
-                console.log('ops')
                 return <p>Drużyna pełna</p>
         }
     }
-
     const handleTeamChange = () => {
         activeTeam === 'Team A' ? setActiveTeam('Team B') : setActiveTeam('Team A')
     }
+    function disableSelect() {
+        switch(activeTeam) {
+            case 'Team A':
+                return isTeamAReady;
+            case 'Team B':
+                return isTeamBReady;
+            default:
+                return false
+        };
+    };
+    
     return (
         <div>
             <Button onClick={() => goBack('playersList')}>Back to the players list</Button>
             <Select
                 disableUnderline
                 fullWidth
+                disabled={disableSelect()}
             >
                 <MenuItem disabled>
                     <ListItemText>{`Add player to ${activeTeam}`}</ListItemText>
@@ -85,6 +123,7 @@ export function TeamsCreator(props: IProps) {
                     {teamStatus(team)}
                 </>
             })}
+            <Button onClick={() => console.log('PLAY!')} disabled={!isTeamAReady || !isTeamBReady}>Play</Button>
         </div>
     );
 };
