@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAvailablePlayers } from '../store/actions';
@@ -18,21 +18,21 @@ export function App() {
     setView('playersList')
   }, [dispatch])
 
-  function renderView(): any {
+  function renderView(): JSX.Element {
     switch (view){
       case 'playersList':
         return (
-        <div>
+        <>
+          <Grid item xs={12}><Button onClick={() => setView('teamsCreator')} fullWidth>Create</Button></Grid>
           {availablePlayers.map((player) => {
             return <>
               <PlayerCard player={player} />
             </>
           })}
-          <Button onClick={() => setView('teamsCreator')}>Create</Button>
-        </div>
+        </>
         )
       case 'teamsCreator':
-        return <TeamsCreator goBack={(view) => setView(view)} />
+        return <TeamsCreator />
       case 'loading':
       default:
         return <p>Loading</p>
@@ -42,10 +42,15 @@ export function App() {
   return (
     <div>
       <header>
-        Cybervadis team builder
+        <Grid container justify='space-between'>
+          <Typography variant="h4" component="h1">Cybervadis team builder</Typography>
+          <Button onClick={() => setView('playersList')}>Back to the players list</Button>
+        </Grid>
       </header>
       <body>
-        {renderView()}
+        <Grid container spacing={1} justify='center'>
+          {renderView()}
+        </Grid>
       </body>
     </div>
   );

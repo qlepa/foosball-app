@@ -9,24 +9,29 @@ import { PlayerCard } from "./PlayerCard";
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 const selectTeams = (state: IStoreState) => state.teams;
 
-interface IProps {
-    goBack: (view: 'playersList' | 'teamsCreator' | 'loading') => void;
-}
-
 const useStyles = makeStyles(({ palette }) => ({
+    teamWrapper: {
+        textAlign: 'center',
+    },
     teamName: {
         color: palette.primary.main,
-    }
+    },
+    playButton: {
+        margin: '10px 0 10px',
+    },
 }),
 {
     name: 'TeamsCreator'
 }
 );
 
-export function TeamsCreator(props: IProps) {
-    const { teamName: teamNameClass } = useStyles();
+export function TeamsCreator() {
+    const { 
+        teamWrapper: teamWrapperClass,
+        teamName: teamNameClass,
+        playButton: playButtonClass,
+     } = useStyles();
     const dispatch = useDispatch();
-    const { goBack } = props;
     const availablePlayers = useSelector(selectAvailablePlayers);
     const teams = useSelector(selectTeams);
     const [activeTeam, setActiveTeam] = useState<ITeam['name']>('Team A');
@@ -66,9 +71,9 @@ export function TeamsCreator(props: IProps) {
         const state = teamState(team)
         switch(state) {
             case TeamState.TeamIncomplete:
-                return <p>Drużyna niekompletna</p>
+                return <Typography color='error'>Team are incomplete</Typography>
             case TeamState.TeamIsFull:
-                return <p>Drużyna pełna</p>
+                return <Typography>Team is full!</Typography>
         }
     }
     const handleTeamChange = () => {
@@ -86,8 +91,11 @@ export function TeamsCreator(props: IProps) {
     };
     
     return (
-        <div>
-            <Button onClick={() => goBack('playersList')}>Back to the players list</Button>
+        <>
+            <Grid xs={12}><Typography align='center'>Choose team</Typography></Grid>
+            <Typography>Team A</Typography>
+            <Switch onChange={handleTeamChange} />
+            <Typography>Team B</Typography>
             <Select
                 disableUnderline
                 fullWidth
@@ -107,7 +115,7 @@ export function TeamsCreator(props: IProps) {
                                         </Typography>
                                     </Grid>
                                     <Grid item>
-                                        <Avatar src={`${player.photo}`} />
+                                        <Avatar src={player.photo} />
                                     </Grid>
                                 </Grid>
                             </ListItemText>
@@ -115,15 +123,25 @@ export function TeamsCreator(props: IProps) {
                     )
                 })}
             </Select>
-            <Switch onChange={handleTeamChange} />
-            {teams.map((team) => {
-                return <>
-                    <p className={teamNameClass}>{team.name}</p>
-                    {team.players.map((player) => <PlayerCard player={player} />)}
-                    {teamStatus(team)}
-                </>
-            })}
-            <Button onClick={() => console.log('PLAY!')} disabled={!isTeamAReady || !isTeamBReady}>Play</Button>
-        </div>
+            <Grid container justify='center' spacing={4}>
+                {teams.map((team) => {
+                    return (
+                        <Grid item xs={12} md={6} justify='center' className={teamWrapperClass}>
+                            <Typography variant='h5' className={teamNameClass}>{team.name}</Typography>
+                            {teamStatus(team)}
+                            <Grid container justify='center' spacing={1}>
+                                {team.players.map((player) => <PlayerCard player={player} />)}
+                            </Grid>
+                        </Grid>
+                    )
+                })}
+            </Grid>
+            <Button onClick={() => console.log('PLAY!')} disabled={!isTeamAReady || !isTeamBReady} fullWidth className={playButtonClass}>Play</Button>
+            {!isTeamAReady || !isTeamBReady 
+            ? 
+            <Typography align='center' color='error'>Teams are incomplete</Typography> 
+            : 
+            null}
+        </>
     );
 };
