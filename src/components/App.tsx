@@ -25,9 +25,7 @@ export function App() {
         <>
           <Grid item xs={12}><Button onClick={() => setView('teamsCreator')} fullWidth>Create</Button></Grid>
           {availablePlayers.map((player) => {
-            return <>
-              <PlayerCard player={player} />
-            </>
+            return <PlayerCard player={player} key={player.name} />
           })}
         </>
         )
@@ -40,18 +38,16 @@ export function App() {
   };
 
   return (
-    <div>
+    <>
       <header>
         <Grid container justify='space-between'>
           <Typography variant="h4" component="h1">Cybervadis team builder</Typography>
           <Button onClick={() => setView('playersList')}>Back to the players list</Button>
         </Grid>
       </header>
-      <body>
         <Grid container spacing={1} justify='center'>
           {renderView()}
         </Grid>
-      </body>
-    </div>
+    </>
   );
 };

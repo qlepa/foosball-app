@@ -37,6 +37,7 @@ export function TeamsCreator() {
     const [activeTeam, setActiveTeam] = useState<ITeam['name']>('Team A');
     const [isTeamAReady, setTeamAStatus] = useState<boolean>(false);
     const [isTeamBReady, setTeamBStatus] = useState<boolean>(false);
+
     useEffect(
         () => {
             teams.forEach((team) => {
@@ -66,7 +67,7 @@ export function TeamsCreator() {
     const handleClick = (team: ITeam['name'],player: IPlayer) => {
             dispatch(removePlayer(player))
             dispatch(addPlayerToTeam(team, player))
-        };
+    };
     const teamStatus = (team: ITeam): JSX.Element => {
         const state = teamState(team)
         switch(state) {
@@ -92,7 +93,7 @@ export function TeamsCreator() {
     
     return (
         <>
-            <Grid xs={12}><Typography align='center'>Choose team</Typography></Grid>
+            <Grid item xs={12}><Typography align='center'>Choose team</Typography></Grid>
             <Typography>Team A</Typography>
             <Switch onChange={handleTeamChange} />
             <Typography>Team B</Typography>
@@ -106,7 +107,7 @@ export function TeamsCreator() {
                 </MenuItem>
                 {availablePlayers.map((player) => {
                     return (
-                        <MenuItem onClick={() => handleClick(activeTeam, player)}>
+                        <MenuItem key={player.name} onClick={() => handleClick(activeTeam, player)}>
                             <ListItemText>
                                 <Grid container justify="space-between">
                                     <Grid item>
@@ -126,11 +127,11 @@ export function TeamsCreator() {
             <Grid container justify='center' spacing={4}>
                 {teams.map((team) => {
                     return (
-                        <Grid item xs={12} md={6} justify='center' className={teamWrapperClass}>
+                        <Grid key={team.name} item xs={12} md={6} className={teamWrapperClass}>
                             <Typography variant='h5' className={teamNameClass}>{team.name}</Typography>
                             {teamStatus(team)}
                             <Grid container justify='center' spacing={1}>
-                                {team.players.map((player) => <PlayerCard player={player} />)}
+                                {team.players.map((player) => <PlayerCard key={player.name} player={player} />)}
                             </Grid>
                         </Grid>
                     )

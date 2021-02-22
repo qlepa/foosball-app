@@ -1,13 +1,22 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardMedia, Dialog, DialogContent, DialogTitle, Grid, makeStyles, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { 
+    Avatar, 
+    Card, 
+    CardContent, 
+    Dialog, 
+    DialogContent, 
+    DialogTitle, 
+    Grid, 
+    makeStyles, 
+    Typography 
+} from "@material-ui/core";
 import { IPlayer } from "../store/actions";
 
 interface IProps {
     player: IPlayer;
-    handlePlayerClick?: Function;
 }
 
-const useStyles = makeStyles(({ palette, spacing, typography }) => ({
+const useStyles = makeStyles(({ spacing }) => ({
     cardWrapper: {
         display: 'flex',
         cursor: 'pointer',
@@ -35,7 +44,6 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 export function PlayerCard(props: IProps) {
     const {
         player,
-        handlePlayerClick,
     } = props;
     const [open, setOpen] = React.useState(false);
     const {

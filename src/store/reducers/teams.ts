@@ -14,7 +14,7 @@ const initialState: ITeam[] = [
 export const teamsReducer = (state: ITeam[] = initialState, action: Action) => {
     switch (action.type) {
         case ActionTypes.addPlayerToTeam:
-            state.map((team) => {
+            state.forEach((team) => {
                 if (team.name === action.payload.name) {
                     team.players.push(action.payload.player)
                 }
