@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
     Avatar, 
     Card, 
@@ -45,7 +45,7 @@ export function PlayerCard(props: IProps) {
     const {
         player,
     } = props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const {
         cardWrapper: cardWrapperClass,
         playerSmallPhoto: playerSmallPhotoClass,
@@ -55,10 +55,10 @@ export function PlayerCard(props: IProps) {
 
     const handleClickOpen = () => {
         setOpen(true);
-      };
+    };
     const handleClose = () => {
         setOpen(false);
-      };
+    };
 
     return (
         <Grid item>
@@ -89,7 +89,7 @@ export function PlayerCard(props: IProps) {
                         <Grid item md={8}>
                             <Typography>Games played: {player.gamesPlayed}</Typography>
                             <Typography>Games won: {player.victories}</Typography>
-                            <Typography>Games scored: {player.goalsScored}</Typography>
+                            <Typography>Goals scored: {player.goalsScored}</Typography>
                         </Grid>
                         <Grid item md={4}>
                             <Avatar variant='square' className={playerLargePhotoClass} src={player.photo} />

@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAvailablePlayers } from '../store/actions';
 import { IStoreState } from '../store/reducers';
@@ -18,24 +18,26 @@ export function App() {
     setView('playersList')
   }, [dispatch])
 
-  function renderView(): JSX.Element {
-    switch (view){
-      case 'playersList':
-        return (
-        <>
-          <Grid item xs={12}><Button onClick={() => setView('teamsCreator')} fullWidth>Create</Button></Grid>
-          {availablePlayers.map((player) => {
-            return <PlayerCard player={player} key={player.name} />
-          })}
-        </>
-        )
-      case 'teamsCreator':
-        return <TeamsCreator />
-      case 'loading':
-      default:
-        return <p>Loading</p>
-    };
-  };
+  const renderView = useCallback(
+    () => {
+      switch (view){
+        case 'playersList':
+          return (
+          <>
+            <Grid item xs={12}><Button onClick={() => setView('teamsCreator')} fullWidth>Create</Button></Grid>
+            {availablePlayers.map((player) => {
+              return <PlayerCard player={player} key={player.name} />
+            })}
+          </>
+          )
+        case 'teamsCreator':
+          return <TeamsCreator />
+        case 'loading':
+        default:
+          return <p>Loading</p>
+      };
+    }, [view, availablePlayers]
+  );
 
   return (
     <>

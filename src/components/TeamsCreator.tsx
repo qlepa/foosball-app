@@ -1,9 +1,9 @@
 import { Avatar, Button, Grid, ListItemText, makeStyles, MenuItem, Select, Switch, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlayerToTeam, IPlayer, ITeam, removePlayer } from "../store/actions";
 import { IStoreState } from "../store/reducers";
-import { TeamState, teamState } from "./bussines-logic/rules";
+import { teamState } from "./bussines-logic/rules";
 import { PlayerCard } from "./PlayerCard";
 
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
@@ -34,61 +34,18 @@ export function TeamsCreator() {
     const dispatch = useDispatch();
     const availablePlayers = useSelector(selectAvailablePlayers);
     const teams = useSelector(selectTeams);
-    const [activeTeam, setActiveTeam] = useState<ITeam['name']>('Team A');
-    const [isTeamAReady, setTeamAStatus] = useState<boolean>(false);
-    const [isTeamBReady, setTeamBStatus] = useState<boolean>(false);
+    const [activeTeamName, setActiveTeamName] = useState<ITeam['name']>('Team A');
+    const enhancedTeams = teamState(teams);
+    const activeTeam = enhancedTeams.find((team) => team.name === activeTeamName)!
+    const areTeamsComplete = enhancedTeams.filter((team)=> team.isTeamComplete === false).length > 0
 
-    useEffect(
-        () => {
-            teams.forEach((team) => {
-                if (teamState(team) === TeamState.TeamIsFull) {
-                    switch (team.name) {
-                        case 'Team A':
-                            setTeamAStatus(true);
-                            break;
-                        case 'Team B':
-                            setTeamBStatus(true);
-                            break;
-                    }  
-                } else if (teamState(team) === TeamState.TeamIncomplete) {
-                    switch (team.name) {
-                        case 'Team A':
-                            setTeamAStatus(false);
-                            break;
-                        case 'Team B':
-                            setTeamBStatus(false);
-                            break;
-
-                    }  
-                }
-            })
-        }, [availablePlayers, teams]
-    )
-    const handleClick = (team: ITeam['name'],player: IPlayer) => {
+    const handlePlayerClick = (team: ITeam['name'],player: IPlayer) => {
             dispatch(removePlayer(player))
             dispatch(addPlayerToTeam(team, player))
     };
-    const teamStatus = (team: ITeam): JSX.Element => {
-        const state = teamState(team)
-        switch(state) {
-            case TeamState.TeamIncomplete:
-                return <Typography color='error'>Team are incomplete</Typography>
-            case TeamState.TeamIsFull:
-                return <Typography>Team is full!</Typography>
-        }
-    }
+
     const handleTeamChange = () => {
-        activeTeam === 'Team A' ? setActiveTeam('Team B') : setActiveTeam('Team A')
-    }
-    function disableSelect() {
-        switch(activeTeam) {
-            case 'Team A':
-                return isTeamAReady;
-            case 'Team B':
-                return isTeamBReady;
-            default:
-                return false
-        };
+        activeTeamName === 'Team A' ? setActiveTeamName('Team B') : setActiveTeamName('Team A')
     };
     
     return (
@@ -100,14 +57,14 @@ export function TeamsCreator() {
             <Select
                 disableUnderline
                 fullWidth
-                disabled={disableSelect()}
+                disabled={activeTeam.isTeamComplete}
             >
                 <MenuItem disabled>
-                    <ListItemText>{`Add player to ${activeTeam}`}</ListItemText>
+                    <ListItemText>{`Add player to ${activeTeamName}`}</ListItemText>
                 </MenuItem>
                 {availablePlayers.map((player) => {
                     return (
-                        <MenuItem key={player.name} onClick={() => handleClick(activeTeam, player)}>
+                        <MenuItem key={player.name} onClick={() => handlePlayerClick(activeTeamName, player)}>
                             <ListItemText>
                                 <Grid container justify="space-between">
                                     <Grid item>
@@ -129,7 +86,12 @@ export function TeamsCreator() {
                     return (
                         <Grid key={team.name} item xs={12} md={6} className={teamWrapperClass}>
                             <Typography variant='h5' className={teamNameClass}>{team.name}</Typography>
-                            {teamStatus(team)}
+                            {enhancedTeams.find((enhanceTeam) => enhanceTeam.name === team.name)?.isTeamComplete
+                            ?
+                            <Typography>Team is full!</Typography>
+                            :
+                            <Typography color='error'>Team is incomplete</Typography>
+                            }
                             <Grid container justify='center' spacing={1}>
                                 {team.players.map((player) => <PlayerCard key={player.name} player={player} />)}
                             </Grid>
@@ -137,8 +99,8 @@ export function TeamsCreator() {
                     )
                 })}
             </Grid>
-            <Button onClick={() => console.log('PLAY!')} disabled={!isTeamAReady || !isTeamBReady} fullWidth className={playButtonClass}>Play</Button>
-            {!isTeamAReady || !isTeamBReady 
+            <Button onClick={() => console.log('PLAY!')} disabled={areTeamsComplete} fullWidth className={playButtonClass}>Play</Button>
+            {areTeamsComplete
             ? 
             <Typography align='center' color='error'>Teams are incomplete</Typography> 
             : 

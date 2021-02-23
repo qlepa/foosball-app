@@ -1,15 +1,16 @@
 import { ITeam } from "../../store/actions";
 
-export enum TeamState {
-    TeamIncomplete ,
-    TeamIsFull,
+interface EnhancedTeam extends ITeam {
+    isTeamComplete: boolean;
 }
 
 const teamSize = 2;
 
-export function teamState (team: ITeam): TeamState {
-    if (team.players.length === teamSize) {
-        return TeamState.TeamIsFull
-    } 
-    return TeamState.TeamIncomplete
+export function teamState (teams: ITeam[]): EnhancedTeam[] {
+    return teams.map((team) => {
+        return {
+            ...team,
+            isTeamComplete: team.players.length === teamSize,
+        }
+    })
 };
