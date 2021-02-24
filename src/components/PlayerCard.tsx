@@ -62,7 +62,7 @@ export function PlayerCard(props: IProps) {
 
     return (
         <Grid item>
-            <Card onClick={handleClickOpen} className={cardWrapperClass}>
+            <Card onClick={handleClickOpen} className={cardWrapperClass} style={{ margin: '4px' }}>
                 <Grid container>
                     <Grid item xs={8}>
                         <CardContent className={playerCardContentClass}>

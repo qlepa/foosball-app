@@ -1,4 +1,5 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAvailablePlayers } from '../store/actions';
@@ -22,7 +23,20 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   button: {
     backgroundColor: palette.primary.main,
     color: palette.common.white,
-  }
+    marginBottom: spacing(1),
+  },
+  gameStarted: {
+    height: '100vh',
+    width: '100vw',
+    backgroundColor: palette.common.black,
+    opacity: 0.3,
+    position: 'fixed',
+    top: 0,
+    zIndex: 1,
+  },
+  displayNone: {
+    display: 'none',
+  },
 }),
 {
   name: 'App'
@@ -33,18 +47,25 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 export function App() {
   const dispatch = useDispatch();
   const [view, setView] = useState<'playersList' | 'teamsCreator' | 'loading'>('loading');
+  const [gameStarted, setGameStarted] = useState(false);
   const availablePlayers = useSelector(selectAvailablePlayers);
 
   const { 
     headerWrapper: headerWrapperClass,
     bodyWrapper: bodyWrapperClass,
     button: buttonClass,
+    gameStarted: gameStartedClass,
+    displayNone: displayNoneClass,
    } = useStyles();
 
   useEffect(() => {
     dispatch(loadAvailablePlayers())
     setView('playersList')
   }, [dispatch])
+
+  const startTheGame = () => {
+    setGameStarted(true);
+  };
 
   const renderView = () => {
       switch (view){
@@ -60,7 +81,7 @@ export function App() {
           </>
           )
         case 'teamsCreator':
-          return <TeamsCreator />
+          return <TeamsCreator startTheGame={startTheGame} />
         case 'loading':
         default:
           return <Grid item xs={12}><p>Loading</p></Grid>
@@ -75,9 +96,14 @@ export function App() {
           {view === 'teamsCreator' ? <Button onClick={() => setView('playersList')} className={buttonClass}>Back to the players list</Button> : null}
         </Grid>
       </header>
-        <Grid container spacing={1} justify='center' className={bodyWrapperClass}>
-          {renderView()}
-        </Grid>
+      <Box>
+      <Grid container justify='center' className={bodyWrapperClass}>
+        {renderView()}
+      </Grid>
+      </Box>
+      <div className={clsx(!gameStarted ? displayNoneClass : undefined, gameStartedClass)}>
+
+      </div>
     </>
   );
 };

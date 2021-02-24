@@ -9,6 +9,10 @@ import { PlayerCard } from "./PlayerCard";
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 const selectTeams = (state: IStoreState) => state.teams;
 
+interface IProps {
+    startTheGame: Function;
+}
+
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     teamWrapper: {
         height: '450px',
@@ -34,13 +38,14 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 }
 );
 
-export function TeamsCreator() {
+export function TeamsCreator(props: IProps) {
     const { 
         teamWrapper: teamWrapperClass,
         teamName: teamNameClass,
         playButton: playButtonClass,
         playerSelect: playerSelectClass,
      } = useStyles();
+     const { startTheGame } = props;
     const dispatch = useDispatch();
     const availablePlayers = useSelector(selectAvailablePlayers);
     const teams = useSelector(selectTeams);
@@ -57,6 +62,11 @@ export function TeamsCreator() {
     const handleTeamChange = () => {
         activeTeamName === 'Team A' ? setActiveTeamName('Team B') : setActiveTeamName('Team A')
     };
+
+    const playGame = () => {
+        setTimeout(function() {window.location.reload()}, 3000)
+        startTheGame()
+    }
     
     return (
         <>
@@ -104,14 +114,14 @@ export function TeamsCreator() {
                             :
                             <Typography color='error'>Team is incomplete</Typography>
                             }
-                            <Grid container justify='center' spacing={1}>
+                            <Grid container justify='center'>
                                 {team.players.map((player) => <PlayerCard key={player.name} player={player} />)}
                             </Grid>
                         </Grid>
                     )
                 })}
             </Grid>
-            <Button onClick={() => console.log('PLAY!')} disabled={areTeamsComplete} fullWidth className={playButtonClass}>Play</Button>
+            <Button onClick={playGame} disabled={areTeamsComplete} fullWidth className={playButtonClass}>Play</Button>
             {areTeamsComplete
             ? 
             <Typography align='center' color='error'>Teams are incomplete</Typography> 
