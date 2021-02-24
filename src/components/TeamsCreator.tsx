@@ -64,7 +64,7 @@ export function TeamsCreator(props: IProps) {
     };
 
     const playGame = () => {
-        setTimeout(function() {window.location.reload()}, 3000)
+        setTimeout(function() {window.location.reload()}, 2000)
         startTheGame()
     }
     

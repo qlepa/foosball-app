@@ -9,7 +9,7 @@ import { TeamsCreator } from './TeamsCreator';
 
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   headerWrapper: {
       backgroundColor: palette.secondary.main,
       padding: spacing(2),
@@ -33,10 +33,17 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     position: 'fixed',
     top: 0,
     zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   displayNone: {
     display: 'none',
   },
+  begin: {
+    color: palette.common.white,
+    fontSize: typography.pxToRem(32),
+  }
 }),
 {
   name: 'App'
@@ -56,6 +63,7 @@ export function App() {
     button: buttonClass,
     gameStarted: gameStartedClass,
     displayNone: displayNoneClass,
+    begin: beginClass,
    } = useStyles();
 
   useEffect(() => {
@@ -102,7 +110,7 @@ export function App() {
       </Grid>
       </Box>
       <div className={clsx(!gameStarted ? displayNoneClass : undefined, gameStartedClass)}>
-
+        <div className={beginClass}>Let's begin!</div>
       </div>
     </>
   );
