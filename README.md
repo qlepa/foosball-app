@@ -1,12 +1,16 @@
-# Foosball Creator by Tomasz Klepacki
+# Foosball Team Creator by Tomasz Klepacki
 
-Browser app to create foosball team.
+Application to create foosball team.
 
 Main frameworks and libraries: 
 - React, 
 - Redux, 
 - TypeScript, 
 - material-ui.
+
+To run project you need:
+- Node JS --> check version https://github.com/facebook/create-react-app#creating-an-app
+- Browser
 
 ### `yarn install` --> only first time
 
