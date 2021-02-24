@@ -6,7 +6,7 @@ interface EnhancedTeam extends ITeam {
 
 const teamSize = 2;
 
-export function teamState (teams: ITeam[]): EnhancedTeam[] {
+export function teamsState (teams: ITeam[]): EnhancedTeam[] {
     return teams.map((team) => {
         return {
             ...team,

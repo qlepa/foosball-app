@@ -3,13 +3,13 @@ import availablePlayersData from '../../data/players.json';
 import { ActionTypes } from './types';
 
 export interface IPlayer {
-    name: string;
-    level: string;
-    victories: string;
-    goalsScored: string;
-    gamesPlayed: string;
-    email: string;
-    photo: string;
+    readonly name: string;
+    readonly level: string;
+    readonly victories: string;
+    readonly goalsScored: string;
+    readonly gamesPlayed: string;
+    readonly email: string;
+    readonly photo: string;
 }
 
 export interface ILoadAvailablePlayersAction {

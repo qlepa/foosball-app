@@ -13,7 +13,7 @@ import {
 import { IPlayer } from "../store/actions";
 
 interface IProps {
-    player: IPlayer;
+    readonly player: IPlayer;
 }
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -22,6 +22,7 @@ const useStyles = makeStyles(({ spacing }) => ({
         cursor: 'pointer',
         padding: spacing(1),
         width: 300,
+        margin: spacing(1),
     },
     playerSmallPhoto: {
         height: 150,
@@ -46,6 +47,7 @@ export function PlayerCard(props: IProps) {
         player,
     } = props;
     const [open, setOpen] = useState(false);
+    
     const {
         cardWrapper: cardWrapperClass,
         playerSmallPhoto: playerSmallPhotoClass,
@@ -56,13 +58,14 @@ export function PlayerCard(props: IProps) {
     const handleClickOpen = () => {
         setOpen(true);
     };
+
     const handleClose = () => {
         setOpen(false);
     };
 
     return (
         <Grid item>
-            <Card onClick={handleClickOpen} className={cardWrapperClass} style={{ margin: '4px' }}>
+            <Card onClick={handleClickOpen} className={cardWrapperClass}>
                 <Grid container>
                     <Grid item xs={8}>
                         <CardContent className={playerCardContentClass}>
@@ -99,4 +102,4 @@ export function PlayerCard(props: IProps) {
             </Dialog>
         </Grid>
     )
-}
+};

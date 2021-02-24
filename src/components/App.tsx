@@ -40,7 +40,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   displayNone: {
     display: 'none',
   },
-  begin: {
+  gameStartedContent: {
     color: palette.common.white,
     fontSize: typography.pxToRem(32),
   }
@@ -63,19 +63,19 @@ export function App() {
     button: buttonClass,
     gameStarted: gameStartedClass,
     displayNone: displayNoneClass,
-    begin: beginClass,
+    gameStartedContent: gameStartedContentClass,
    } = useStyles();
 
   useEffect(() => {
     dispatch(loadAvailablePlayers())
     setView('playersList')
-  }, [dispatch])
+  }, [dispatch]);
 
   const startTheGame = () => {
     setGameStarted(true);
   };
 
-  const renderView = () => {
+  const renderView = (): JSX.Element => {
       switch (view){
         case 'playersList':
           return (
@@ -110,7 +110,7 @@ export function App() {
       </Grid>
       </Box>
       <div className={clsx(!gameStarted ? displayNoneClass : undefined, gameStartedClass)}>
-        <div className={beginClass}>Let's begin!</div>
+        <div className={gameStartedContentClass}>Let's begin!</div>
       </div>
     </>
   );

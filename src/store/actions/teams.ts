@@ -2,8 +2,8 @@ import { IPlayer } from './availablePlayers';
 import { ActionTypes } from './types';
 
 export interface ITeam {
-    name: 'Team A' | 'Team B';
-    players: IPlayer[];
+    readonly name: 'Team A' | 'Team B';
+    readonly players: IPlayer[];
 }
 
 export interface IAddPlayerToTeamAction {

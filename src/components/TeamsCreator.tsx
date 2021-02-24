@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlayerToTeam, IPlayer, ITeam, removePlayer } from "../store/actions";
 import { IStoreState } from "../store/reducers";
-import { teamState } from "./bussines-logic/rules";
+import { teamsState } from "./bussines-logic/rules";
 import { PlayerCard } from "./PlayerCard";
 
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 const selectTeams = (state: IStoreState) => state.teams;
 
 interface IProps {
-    startTheGame: Function;
+    readonly startTheGame: Function;
 }
 
 const useStyles = makeStyles(({ palette, spacing, typography }) => ({
@@ -39,20 +39,21 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
 );
 
 export function TeamsCreator(props: IProps) {
+    const { startTheGame } = props;
+    const dispatch = useDispatch();
+    const availablePlayers = useSelector(selectAvailablePlayers);
+    const teams = useSelector(selectTeams);
+    const [activeTeamName, setActiveTeamName] = useState<ITeam['name']>('Team A');
+    const enhancedTeams = teamsState(teams);
+    const activeTeam = enhancedTeams.find((team) => team.name === activeTeamName)!
+    const areTeamsComplete = enhancedTeams.filter((team)=> team.isTeamComplete === false).length > 0;
+
     const { 
         teamWrapper: teamWrapperClass,
         teamName: teamNameClass,
         playButton: playButtonClass,
         playerSelect: playerSelectClass,
      } = useStyles();
-     const { startTheGame } = props;
-    const dispatch = useDispatch();
-    const availablePlayers = useSelector(selectAvailablePlayers);
-    const teams = useSelector(selectTeams);
-    const [activeTeamName, setActiveTeamName] = useState<ITeam['name']>('Team A');
-    const enhancedTeams = teamState(teams);
-    const activeTeam = enhancedTeams.find((team) => team.name === activeTeamName)!
-    const areTeamsComplete = enhancedTeams.filter((team)=> team.isTeamComplete === false).length > 0
 
     const handlePlayerClick = (team: ITeam['name'],player: IPlayer) => {
             dispatch(removePlayer(player))
@@ -66,7 +67,7 @@ export function TeamsCreator(props: IProps) {
     const playGame = () => {
         setTimeout(function() {window.location.reload()}, 2000)
         startTheGame()
-    }
+    };
     
     return (
         <>
