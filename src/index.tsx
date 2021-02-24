@@ -5,12 +5,16 @@ import { Provider } from 'react-redux';
 import { App } from './components/App';
 import { reducers } from './store/reducers';
 import thunk from 'redux-thunk';
+import { ThemeProvider } from '@material-ui/core';
+import { theme } from './mui-theme';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <App />
+    </Provider> 
+    </ThemeProvider>,
   document.getElementById('root')
 );

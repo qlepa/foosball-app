@@ -1,4 +1,4 @@
-import { Avatar, Button, Grid, ListItemText, makeStyles, MenuItem, Select, Switch, Typography } from "@material-ui/core";
+import { Avatar, Button, FormControl, Grid, ListItemText, makeStyles, MenuItem, Select, Switch, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlayerToTeam, IPlayer, ITeam, removePlayer } from "../store/actions";
@@ -9,15 +9,24 @@ import { PlayerCard } from "./PlayerCard";
 const selectAvailablePlayers = (state: IStoreState) => state.availablePlayers;
 const selectTeams = (state: IStoreState) => state.teams;
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, spacing, typography }) => ({
     teamWrapper: {
+        height: '450px',
         textAlign: 'center',
     },
     teamName: {
         color: palette.primary.main,
     },
     playButton: {
-        margin: '10px 0 10px',
+        backgroundColor: palette.customGreen.main,
+        color: palette.common.white,
+        marginTop: spacing(2),
+        marginBottom: spacing(2),
+        fontSize: typography.pxToRem(18),
+    },
+    playerSelect: {
+        marginTop: spacing(2),
+        marginBottom: spacing(2),
     },
 }),
 {
@@ -30,6 +39,7 @@ export function TeamsCreator() {
         teamWrapper: teamWrapperClass,
         teamName: teamNameClass,
         playButton: playButtonClass,
+        playerSelect: playerSelectClass,
      } = useStyles();
     const dispatch = useDispatch();
     const availablePlayers = useSelector(selectAvailablePlayers);
@@ -54,33 +64,35 @@ export function TeamsCreator() {
             <Typography>Team A</Typography>
             <Switch onChange={handleTeamChange} />
             <Typography>Team B</Typography>
-            <Select
-                disableUnderline
-                fullWidth
-                disabled={activeTeam.isTeamComplete}
-            >
-                <MenuItem disabled>
-                    <ListItemText>{`Add player to ${activeTeamName}`}</ListItemText>
-                </MenuItem>
-                {availablePlayers.map((player) => {
-                    return (
-                        <MenuItem key={player.name} onClick={() => handlePlayerClick(activeTeamName, player)}>
-                            <ListItemText>
-                                <Grid container justify="space-between">
-                                    <Grid item>
-                                        <Typography>
-                                            {player.name}
-                                        </Typography>
+            <FormControl fullWidth>
+                <Select
+                    variant='outlined'
+                    disabled={activeTeam.isTeamComplete}
+                    className={playerSelectClass}
+                >
+                    <MenuItem disabled>
+                        <ListItemText>{`Add player to ${activeTeamName}`}</ListItemText>
+                    </MenuItem>
+                    {availablePlayers.map((player) => {
+                        return (
+                            <MenuItem key={player.name} onClick={() => handlePlayerClick(activeTeamName, player)}>
+                                <ListItemText>
+                                    <Grid container justify="space-between">
+                                        <Grid item>
+                                            <Typography>
+                                                {player.name}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Avatar src={player.photo} />
+                                        </Grid>
                                     </Grid>
-                                    <Grid item>
-                                        <Avatar src={player.photo} />
-                                    </Grid>
-                                </Grid>
-                            </ListItemText>
-                        </MenuItem>
-                    )
-                })}
-            </Select>
+                                </ListItemText>
+                            </MenuItem>
+                        )
+                    })}
+                </Select>
+            </FormControl>
             <Grid container justify='center' spacing={4}>
                 {teams.map((team) => {
                     return (
